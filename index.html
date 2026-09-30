@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TripWise</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body>
+
+    <!-- ================= Header ================= -->
+
+    <header class="navbar">
+
+        <div class="container navbar-content">
+            <a href="index.html" class="logo">
+                Trip<span>Wise</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="pages/itinerary.html">Itinerary</a>
+                <a href="pages/expenses.html">Split It</a>
+            </nav>
+        </div>
+
+    </header>
+
+
+    <!-- ================= Main ================= -->
+
+    <main>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <p class="hero-tag">PLAN | TRAVEL | SPLIT</p>
+                    <h1>Your trip,<span>organized.</span></h1>
+                    <p class="hero-description">Plan your journeys, organize itineraries, manage your travel group and split expenses with ease.</p>
+                    <button class="primary-btn" id="createTripBtn">
+                        Create New Trip
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= Trips Section ================= -->
+        <section class="trips-section">
+
+            <div class="container">
+                <div class="section-heading">
+                    <div>
+                        <p class="section-label">YOUR TRAVELS</p>
+                        <h2>My Trips</h2>
+                    </div>
+                    <button class="secondary-btn" id="addTripBtn">
+                        + Add Trip
+                    </button>
+
+                </div>
+
+                <!-- This section is for adding trips -->
+                <div class="trips-container" id="tripsContainer">
+                    <div class="empty-state" id="emptyState">
+                        <h3>No trips yet</h3>
+                        <p> Create your first trip and start planning your journey.</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ================= FEATURES ================= -->
+
+        <section class="features-section">
+
+            <div class="container">
+                <div class="section-heading centered">
+                    <p class="section-label">WHAT YOU CAN DO</p>
+                    <h2>Everything for your trip</h2>
+                </div>
+
+
+                <div class="features-grid">
+
+                    <article class="feature-card">
+                        <h3>Plan Itinerary</h3>
+
+                        <p>Organize your trip day-by-day and keep all your activities in one place.</p>
+                    </article>
+
+
+                    <article class="feature-card">
+                        <h3>Manage Group</h3>
+                        <p>Keep track of everyone travelling with you.</p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+                        <h3>Split Expenses</h3>
+                        <p>Track shared expenses and calculate everyone's contribution.</p>
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="footer">
+        <div class="container">
+            <p> 2026 TripWise. All rights received.</p>
+
+        </div>
+    </footer>
+
+
+    <script src="js/app.js"></script>
+
+</body>
+</html>
