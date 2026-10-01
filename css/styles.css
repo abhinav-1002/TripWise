@@ -249,3 +249,104 @@ button {
     text-align: center;
     font-size: 0.9rem;
 }
+
+
+/* ================================
+   TRIP FORM
+================================ */
+
+.trip-form-container {
+    display: none;
+    margin-bottom: 35px;
+}
+
+.trip-form {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.trip-form h3 {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-weight: 600;
+}
+
+.form-group input {
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: var(--primary);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+
+/* Trip Cards */
+
+.trips-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.trip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.trip-card h3 {
+    margin-bottom: 8px;
+}
+
+.trip-card p {
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.trip-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.trip-card-actions button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+}
+
+.delete-trip-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+}

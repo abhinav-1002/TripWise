@@ -45,15 +45,12 @@
                         Create New Trip
                     </button>
                 </div>
-
             </div>
-
         </section>
 
 
         <!-- ================= Trips Section ================= -->
         <section class="trips-section">
-
             <div class="container">
                 <div class="section-heading">
                     <div>
@@ -63,23 +60,95 @@
                     <button class="secondary-btn" id="addTripBtn">
                         + Add Trip
                     </button>
-
                 </div>
 
-                <!-- This section is for adding trips -->
+                <!-- Trip Form -->
+                <div class="trip-form-container" id="tripFormContainer">
+                    <form id="tripForm" class="trip-form">
+                        <h3>Create New Trip</h3>
+                        <div class="form-group">
+                            <label for="tripName">Trip Name</label>
+                            <input
+                                type="text"
+                                id="tripName"
+                                placeholder="e.g. Goa Trip"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <input
+                                type="text"
+                                id="destination"
+                                placeholder="e.g. Goa"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">Start Date</label>
+                                <input
+                                    type="date"
+                                    id="startDate"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="endDate">End Date</label>
+                                <input
+                                    type="date"
+                                    id="endDate"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="members">Number of Members</label>
+                            <input
+                                type="number"
+                                id="members"
+                                min="1"
+                                placeholder="e.g. 4"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-buttons">
+                            <button
+                                type="submit"
+                                class="primary-btn"
+                            >
+                                Create Trip
+                            </button>
+                            <button
+                                type="button"
+                                class="secondary-btn"
+                                id="cancelTripBtn"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Trips will be displayed here -->
                 <div class="trips-container" id="tripsContainer">
                     <div class="empty-state" id="emptyState">
                         <h3>No trips yet</h3>
-                        <p> Create your first trip and start planning your journey.</p>
+                        <p>
+                            Create your first trip and start planning your journey.
+                        </p>
                     </div>
                 </div>
             </div>
-
         </section>
 
 
         <!-- ================= FEATURES ================= -->
-
         <section class="features-section">
 
             <div class="container">
@@ -87,7 +156,6 @@
                     <p class="section-label">WHAT YOU CAN DO</p>
                     <h2>Everything for your trip</h2>
                 </div>
-
 
                 <div class="features-grid">
 
@@ -97,13 +165,11 @@
                         <p>Organize your trip day-by-day and keep all your activities in one place.</p>
                     </article>
 
-
                     <article class="feature-card">
                         <h3>Manage Group</h3>
                         <p>Keep track of everyone travelling with you.</p>
 
                     </article>
-
 
                     <article class="feature-card">
                         <h3>Split Expenses</h3>
@@ -111,7 +177,6 @@
                     </article>
 
                 </div>
-
             </div>
 
         </section>
@@ -120,7 +185,6 @@
 
 
     <!-- ================= FOOTER ================= -->
-
     <footer class="footer">
         <div class="container">
             <p> 2026 TripWise. All rights received.</p>
@@ -128,7 +192,7 @@
         </div>
     </footer>
 
-
+    <script src="js/helpers/storage.js"></script>
     <script src="js/app.js"></script>
 
 </body>
