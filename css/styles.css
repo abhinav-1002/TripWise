@@ -192,11 +192,11 @@ button {
 }
 
 .empty-state {
-    background: var(--surface);
-    border: 1px dashed var(--border);
-    border-radius: 16px;
-    padding: 60px 20px;
+    padding: 50px;
     text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
 }
 
 
@@ -313,6 +313,10 @@ button {
 /* Trip Cards */
 
 .trips-container {
+    display: block;
+}
+
+.trips-container.has-trips {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;

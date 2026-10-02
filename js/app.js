@@ -33,6 +33,8 @@ function displayTrips() {
 
     if (trips.length === 0) {
 
+        tripsContainer.classList.remove("has-trips");
+
         tripsContainer.innerHTML = `
             <div class="empty-state">
                 <h3>No trips yet</h3>
@@ -44,6 +46,8 @@ function displayTrips() {
 
         return;
     }
+
+    tripsContainer.classList.add("has-trips");
 
     trips.forEach(trip => {
 
