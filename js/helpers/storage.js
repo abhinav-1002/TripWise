@@ -25,3 +25,77 @@ function deleteTrip(tripId) {
     const updatedTrips = trips.filter(trip => trip.id !== tripId);
     saveTrips(updatedTrips);
 }
+
+/* Itinerary Storage */
+
+const ITINERARY_KEY = "tripwise_itinerary";
+
+
+function getActivities() {
+
+    const activities = localStorage.getItem(ITINERARY_KEY);
+
+    if (activities === null) {
+        return [];
+    }
+
+    return JSON.parse(activities);
+}
+
+
+function saveActivities(activities) {
+
+    localStorage.setItem(
+        ITINERARY_KEY,
+        JSON.stringify(activities)
+    );
+
+}
+
+
+function addActivity(activity) {
+
+    const activities = getActivities();
+
+    activities.push(activity);
+
+    saveActivities(activities);
+
+}
+
+
+function updateActivity(activityId, updatedActivity) {
+
+    const activities = getActivities();
+
+    const updatedActivities = activities.map(activity => {
+
+        if (activity.id === activityId) {
+
+            return {
+                ...activity,
+                ...updatedActivity
+            };
+
+        }
+
+        return activity;
+
+    });
+
+    saveActivities(updatedActivities);
+
+}
+
+
+function deleteActivity(activityId) {
+
+    const activities = getActivities();
+
+    const updatedActivities = activities.filter(
+        activity => activity.id !== activityId
+    );
+
+    saveActivities(updatedActivities);
+
+}

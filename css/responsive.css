@@ -73,3 +73,25 @@
     }
 
 }
+
+/* Itinerary Responsive */
+
+@media (max-width: 768px) {
+
+    .activity-card {
+        flex-direction: column;
+    }
+
+    .activity-actions {
+        width: 100%;
+    }
+
+    .activity-actions button {
+        flex: 1;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+}
