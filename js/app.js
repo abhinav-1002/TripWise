@@ -27,7 +27,6 @@ function hideTripForm() {
 
 /* Display trips */
 function displayTrips() {
-
     const trips = getTrips();
     tripsContainer.innerHTML = "";
 
@@ -52,7 +51,6 @@ function displayTrips() {
     trips.forEach(trip => {
 
         const tripCard = document.createElement("div");
-
         tripCard.classList.add("trip-card");
 
         tripCard.innerHTML = `
@@ -76,12 +74,25 @@ function displayTrips() {
             <div class="trip-card-actions">
 
                 <button
+                    class="secondary-btn"
+                    onclick="showMembers('${trip.id}')"
+                >
+                    Manage Members
+                </button>
+
+                <button
                     class="delete-trip-btn"
                     onclick="removeTrip('${trip.id}')"
                 >
                     Delete
                 </button>
 
+            </div>
+
+            <div
+                class="members-section"
+                id="members-${trip.id}"
+            >
             </div>
         `;
 
@@ -120,7 +131,6 @@ tripForm.addEventListener("submit", function(event) {
 
 /* Delete trips */
 function removeTrip(tripId) {
-
     const shouldDelete = confirm(
         "Are you sure you want to delete this trip?"
     );
@@ -133,12 +143,135 @@ function removeTrip(tripId) {
     displayTrips();
 }
 
+/* Show members */
+
+function showMembers(tripId) {
+    const membersSection = document.getElementById(`members-${tripId}`);
+    const trip = getTripById(tripId);
+
+    if (!trip) {
+        return;
+    }
+
+    if (!trip.membersList) {
+        trip.membersList = [];
+    }
+
+    let membersHTML = `
+        <div class="members-box">
+
+            <h4>
+                ${trip.name} Members
+            </h4>
+
+            <div class="member-list">
+    `;
+
+    if (trip.membersList.length === 0) {
+
+        membersHTML += `
+            <p class="no-members">
+                No members added yet.
+            </p>
+        `;
+
+    } else {
+        trip.membersList.forEach(member => {
+
+            membersHTML += `
+                <div class="member-item">
+
+                    <span>
+                        ${member.name}
+                    </span>
+
+                    <button
+                        class="delete-member-btn"
+                        onclick="removeMember(
+                            '${trip.id}',
+                            '${member.id}'
+                        )"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+            `;
+
+        });
+
+    }
+
+    membersHTML += `
+
+            </div>
+
+            <form
+                class="member-form"
+                onsubmit="addNewMember(event, '${trip.id}')"
+            >
+
+                <input
+                    type="text"
+                    id="member-name-${trip.id}"
+                    placeholder="Enter member name"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    Add Member
+                </button>
+
+            </form>
+
+        </div>
+    `;
+
+    membersSection.innerHTML = membersHTML;
+}
+
+/* Add member */
+
+function addNewMember(event, tripId) {
+
+    event.preventDefault();
+
+    const memberInput = document.getElementById(`member-name-${tripId}`);
+    const memberName = memberInput.value.trim();
+
+    if (memberName === "") {
+        return;
+    }
+
+
+    addMember(tripId, memberName);
+    displayTrips();
+    showMembers(tripId);
+}
+
+/* Delete member */
+
+function removeMember(tripId, memberId) {
+    const shouldDelete = confirm(
+        "Are you sure you want to delete this member?"
+    );
+
+    if (!shouldDelete) {
+        return;
+    }
+
+    deleteMember(tripId, memberId);
+    displayTrips();
+    showMembers(tripId);
+}
 
 /* Events */
 createTripBtn.addEventListener("click", showTripForm);
 addTripBtn.addEventListener("click", showTripForm);
 cancelTripBtn.addEventListener("click", hideTripForm);
-
 
 /* Load trips */
 displayTrips();

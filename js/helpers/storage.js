@@ -32,7 +32,6 @@ const ITINERARY_KEY = "tripwise_itinerary";
 
 
 function getActivities() {
-
     const activities = localStorage.getItem(ITINERARY_KEY);
 
     if (activities === null) {
@@ -44,39 +43,26 @@ function getActivities() {
 
 
 function saveActivities(activities) {
-
-    localStorage.setItem(
-        ITINERARY_KEY,
-        JSON.stringify(activities)
-    );
-
+    localStorage.setItem(ITINERARY_KEY,JSON.stringify(activities));
 }
 
 
 function addActivity(activity) {
-
     const activities = getActivities();
-
     activities.push(activity);
-
     saveActivities(activities);
-
 }
 
 
 function updateActivity(activityId, updatedActivity) {
-
     const activities = getActivities();
-
     const updatedActivities = activities.map(activity => {
 
         if (activity.id === activityId) {
-
             return {
                 ...activity,
                 ...updatedActivity
             };
-
         }
 
         return activity;
@@ -84,18 +70,57 @@ function updateActivity(activityId, updatedActivity) {
     });
 
     saveActivities(updatedActivities);
-
 }
 
 
 function deleteActivity(activityId) {
-
     const activities = getActivities();
-
     const updatedActivities = activities.filter(
         activity => activity.id !== activityId
     );
-
     saveActivities(updatedActivities);
+}
 
+/* Trip members */
+
+function getTripById(tripId) {
+    const trips = getTrips();
+    return trips.find(trip => trip.id === tripId);
+}
+
+
+function addMember(tripId, memberName) {
+    const trips = getTrips();
+    const trip = trips.find(trip => trip.id === tripId);
+
+    if (!trip) {
+        return;
+    }
+
+    if (!trip.membersList) {
+        trip.membersList = [];
+    }
+
+    const newMember = {
+        id: Date.now().toString(),
+        name: memberName
+    };
+
+    trip.membersList.push(newMember);
+    saveTrips(trips);
+}
+
+
+function deleteMember(tripId, memberId) {
+    const trips = getTrips();
+    const trip = trips.find(trip => trip.id === tripId);
+
+    if (!trip || !trip.membersList) {
+        return;
+    }
+
+    trip.membersList = trip.membersList.filter(
+        member => member.id !== memberId
+    );
+    saveTrips(trips);
 }

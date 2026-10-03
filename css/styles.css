@@ -473,3 +473,71 @@ button {
     background: #fee2e2;
     color: #b91c1c;
 }
+
+/* Members */
+
+.members-section {
+    margin-top: 20px;
+}
+
+.members-box {
+    padding: 18px;
+    background: var(--background);
+    border-radius: 12px;
+}
+
+.members-box h4 {
+    margin-bottom: 15px;
+}
+
+.member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.delete-member-btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #fee2e2;
+    color: #b91c1c;
+    cursor: pointer;
+}
+
+.no-members {
+    color: var(--muted);
+    margin-bottom: 15px;
+}
+
+.member-form {
+    display: flex;
+    gap: 10px;
+}
+
+.member-form input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+}
+
+.member-form input:focus {
+    border-color: var(--primary);
+}
+
+.member-form button {
+    padding: 10px 16px;
+}
