@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TripWise - Split It</title>
+
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+</head>
+
+
+<body>
+
+    <!-- ================= Header ================= -->
+
+    <header class="navbar">
+        <div class="container navbar-content">
+            <a href="../index.html" class="logo">
+                Trip<span>Wise</span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="../index.html">
+                    Home
+                </a>
+
+                <a href="itinerary.html">
+                    Itinerary
+                </a>
+
+                <a href="expenses.html" class="active">
+                    Split It
+                </a>
+
+            </nav>
+        </div>
+    </header>
+
+
+    <!-- ================= Main ================= -->
+
+    <main>
+
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <p class="section-label">
+                    MANAGE EXPENSES
+                </p>
+
+                <h1>
+                    Split It
+                </h1>
+
+                <p>
+                    Track your shared trip expenses in one place.
+                </p>
+            </div>
+        </section>
+
+
+        <!-- ================= Expenses Section ================= -->
+
+        <section class="expenses-section">
+            <div class="container">
+            <!-- ================= Trip Selection ================= -->
+                <div class="trip-selector">
+                    <label for="tripSelect">
+                        Select Trip
+                    </label>
+                    <select id="tripSelect">
+                        <option value="">
+                            Select a trip
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="section-heading">
+                    <div>
+                        <p class="section-label">
+                            YOUR EXPENSES
+                        </p>
+
+                        <h2>
+                            Expenses
+                        </h2>
+
+                    </div>
+
+                    <button
+                        class="secondary-btn"
+                        id="addExpenseBtn"
+                    >
+                        + Add Expense
+                    </button>
+                </div>
+
+
+                <!-- ================= Expense Form ================= -->
+
+                <div
+                    class="expense-form-container"
+                    id="expenseFormContainer"
+                >
+
+                    <form
+                        id="expenseForm"
+                        class="expense-form"
+                    >
+
+                        <h3>
+                            Add Expense
+                        </h3>
+
+                        <div class="form-group">
+                            <label for="expenseName">
+                                Expense Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="expenseName"
+                                placeholder="e.g. Hotel"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="expenseAmount">
+                                Amount
+                            </label>
+                            <input
+                                type="number"
+                                id="expenseAmount"
+                                min="1"
+                                step="0.01"
+                                placeholder="e.g. 5000"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="paidBy">
+                                Paid By
+                            </label>
+
+                            <select
+                                id="paidBy"
+                                required
+                            >
+
+                                <option value="">
+                                    Select Member
+                                </option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="expenseDate">
+                                Date
+                            </label>
+                            <input
+                                type="date"
+                                id="expenseDate"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-buttons">
+                            <button
+                                type="submit"
+                                class="primary-btn"
+                            >
+                                Add Expense
+                            </button>
+                            <button
+                                type="button"
+                                class="secondary-btn"
+                                id="cancelExpenseBtn"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+
+                <!-- ================= Expenses ================= -->
+
+                <div
+                    class="expenses-container"
+                    id="expensesContainer"
+                >
+                    <div
+                        class="empty-state"
+                        id="emptyExpenses"
+                    >
+                        <h3>
+                            No expenses yet
+                        </h3>
+                        <p>
+                            Add your first expense to start tracking your trip spending.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- ================= Footer ================= -->
+
+    <footer class="footer">
+        <div class="container">
+            <p>
+                &copy; 2026 TripWise. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+
+    <script src="../js/helpers/storage.js"></script>
+    <script src="../js/expenses.js"></script>
+
+</body>
+
+</html>

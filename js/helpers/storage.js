@@ -26,6 +26,7 @@ function deleteTrip(tripId) {
     saveTrips(updatedTrips);
 }
 
+
 /* Itinerary Storage */
 
 const ITINERARY_KEY = "tripwise_itinerary";
@@ -81,6 +82,7 @@ function deleteActivity(activityId) {
     saveActivities(updatedActivities);
 }
 
+
 /* Trip members */
 
 function getTripById(tripId) {
@@ -123,4 +125,52 @@ function deleteMember(tripId, memberId) {
         member => member.id !== memberId
     );
     saveTrips(trips);
+}
+
+
+/* Expense Storage */
+
+const EXPENSES_KEY = "tripwise_expenses";
+
+function getExpenses() {
+    const expenses = localStorage.getItem(EXPENSES_KEY);
+    if (expenses === null) {
+        return [];
+    }
+    return JSON.parse(expenses);
+}
+
+function saveExpenses(expenses) {
+    localStorage.setItem(
+        EXPENSES_KEY,
+        JSON.stringify(expenses)
+    );
+}
+
+function addExpense(expense) {
+    const expenses = getExpenses();
+    expenses.push(expense);
+    saveExpenses(expenses);
+}
+
+function updateExpense(expenseId, updatedExpense) {
+    const expenses = getExpenses();
+    const updatedExpenses = expenses.map(expense => {
+        if (expense.id === expenseId) {
+            return {
+                ...expense,
+                ...updatedExpense
+            };
+        }
+        return expense;
+    });
+    saveExpenses(updatedExpenses);
+}
+
+function deleteExpense(expenseId) {
+    const expenses = getExpenses();
+    const updatedExpenses = expenses.filter(
+        expense => expense.id !== expenseId
+    );
+    saveExpenses(updatedExpenses);
 }

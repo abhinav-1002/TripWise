@@ -259,9 +259,7 @@ button {
 }
 
 
-/* ================================
-   TRIP FORM
-================================ */
+/* Trip form */
 
 .trip-form-container {
     display: none;
@@ -540,4 +538,157 @@ button {
 
 .member-form button {
     padding: 10px 16px;
+}
+
+/* Expenses */
+
+.trip-selector {
+    max-width: 700px;
+    margin-bottom: 35px;
+}
+
+.trip-selector label {
+    display: block;
+    margin-bottom: 9px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.trip-selector select {
+    width: 100%;
+    padding: 13px 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    background-color: var(--surface);
+    color: var(--text);
+
+    font-size: 1rem;
+    font-family: inherit;
+
+    outline: none;
+    cursor: pointer;
+}
+
+.trip-selector select:hover {
+    border-color: var(--primary);
+}
+
+.trip-selector select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.trip-selector select:focus {
+    border-color: var(--primary);
+}
+
+
+/* Expense form */
+
+.expense-form-container {
+    display: none;
+    margin-bottom: 35px;
+}
+
+.expense-form {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.expense-form h3 {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+}
+
+.expense-form select {
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    font-size: 1rem;
+    outline: none;
+}
+
+.expense-form select:focus {
+    border-color: var(--primary);
+}
+
+
+/* Expenses Container */
+
+.expenses-section {
+    padding-bottom: 50px;
+}
+
+.expenses-container {
+    display: block;
+    margin-bottom: 50px;
+}
+
+.expenses-container.has-expenses {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 50px;
+}
+
+
+/* Expense Card */
+
+.expense-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    padding: 24px;
+
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.expense-date {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+
+.expense-info h3 {
+    margin-bottom: 8px;
+}
+
+.expense-info p {
+    color: var(--muted);
+    margin-bottom: 5px;
+}
+
+.expense-right {
+    text-align: right;
+}
+
+.expense-right h3 {
+    margin-bottom: 12px;
+}
+
+.expense-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.expense-actions button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.delete-expense-btn {
+    background: #fee2e2;
+    color: #b91c1c;
 }
