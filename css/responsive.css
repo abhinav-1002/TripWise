@@ -119,3 +119,18 @@
     }
 
 }
+
+/* Split summary responsive */
+
+@media (max-width: 768px) {
+
+    .summary-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .balance-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}

@@ -60,7 +60,6 @@ function loadMembers(tripId) {
 /* Show Form */
 
 function showExpenseForm() {
-
     const selectedTrip = tripSelect.value;
 
     if (selectedTrip === "") {
@@ -106,6 +105,8 @@ function displayExpenses() {
                 </p>
             </div>
         `;
+
+        displaySplitSummary();
         return;
     }
 
@@ -133,6 +134,8 @@ function displayExpenses() {
             </div>
         `;
 
+        displaySplitSummary();
+
         return;
     }
 
@@ -147,6 +150,8 @@ function displayExpenses() {
         expenseCard.classList.add(
             "expense-card"
         );
+
+        displaySplitSummary();
 
 
         expenseCard.innerHTML = `
@@ -267,7 +272,6 @@ function editExpense(expenseId) {
 /* Delete Expense */
 
 function removeExpense(expenseId) {
-
     const shouldDelete =
         confirm(
             "Are you sure you want to delete this expense?"
@@ -309,3 +313,137 @@ cancelExpenseBtn.addEventListener(
 
 loadTrips();
 displayExpenses();
+
+/* Split calculation */
+
+function displaySplitSummary() {
+    const selectedTripId = tripSelect.value;
+    const totalExpensesElement = document.getElementById("totalExpenses");
+    const eachPersonPaysElement = document.getElementById("eachPersonPays");
+    const balanceList = document.getElementById("balanceList");
+
+
+    if (selectedTripId === "") {
+
+        totalExpensesElement.textContent = "₹0.00";
+        eachPersonPaysElement.textContent = "₹0.00";
+
+        balanceList.innerHTML = "";
+        return;
+    }
+
+
+    const trip = getTripById(selectedTripId);
+
+    if (!trip || !trip.membersList) {
+
+        totalExpensesElement.textContent = "₹0.00";
+        eachPersonPaysElement.textContent = "₹0.00";
+
+        balanceList.innerHTML = "";
+        return;
+    }
+
+
+    const expenses = getExpenses().filter(
+        expense => expense.tripId === selectedTripId
+    );
+
+
+    const members = trip.membersList;
+
+
+    /* Total expense */
+
+    let totalExpenses = 0;
+
+    expenses.forEach(expense => {
+        totalExpenses += Number(expense.amount);
+    });
+
+
+    /* Each person's share */
+
+    let eachPersonPays = 0;
+    if (members.length > 0) {
+        eachPersonPays = totalExpenses / members.length;
+    }
+
+
+    totalExpensesElement.textContent = `₹${totalExpenses.toFixed(2)}`;
+    eachPersonPaysElement.textContent = `₹${eachPersonPays.toFixed(2)}`;
+
+
+    /* Memeber Balances */
+
+    balanceList.innerHTML = "";
+
+    if (members.length === 0) {
+        balanceList.innerHTML = `
+            <p class="no-members">
+                Add members to this trip to calculate balances.
+            </p>
+        `;
+
+        return;
+    }
+
+    members.forEach(member => {
+        let paidAmount = 0;
+
+        expenses.forEach(expense => {
+            if (expense.paidBy === member.name) {
+                paidAmount += Number(expense.amount);
+            }
+        });
+
+        const balance = paidAmount - eachPersonPays;
+
+        const balanceClass =
+            balance > 0 ?
+                "positive-balance"
+                : balance < 0 ?
+                    "negative-balance"
+                    : "zero-balance";
+
+
+        const balanceText =
+            balance > 0 ?
+                `Gets ₹${balance.toFixed(2)}`
+                : balance < 0 ?
+                    `Owes ₹${Math.abs(balance).toFixed(2)}`
+                    : "Settled";
+
+
+        const balanceItem = document.createElement("div");
+
+        balanceItem.classList.add(
+            "balance-item"
+        );
+
+
+        balanceItem.innerHTML = `
+            <div>
+                <h3>
+                    ${member.name}
+                </h3>
+
+                <p>
+                    Paid: ₹${paidAmount.toFixed(2)}
+                </p>
+            </div>
+
+            <div class="${balanceClass}">
+                ${balanceText}
+            </div>
+
+        `;
+
+
+        balanceList.appendChild(
+            balanceItem
+        );
+
+    });
+
+}
