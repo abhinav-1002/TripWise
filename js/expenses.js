@@ -6,6 +6,7 @@ const cancelExpenseBtn = document.getElementById("cancelExpenseBtn");
 const expensesContainer = document.getElementById("expensesContainer");
 const paidBySelect = document.getElementById("paidBy");
 
+const splitWorker = new Worker("./../js/workers/splitWorker.js");
 
 let editingExpenseId = null;
 
@@ -106,8 +107,9 @@ function displayExpenses() {
             </div>
         `;
 
-        displaySplitSummary();
+        clearSplitData();
         return;
+        
     }
 
 
@@ -134,8 +136,7 @@ function displayExpenses() {
             </div>
         `;
 
-        displaySplitSummary();
-
+        clearSplitData();
         return;
     }
 
@@ -150,9 +151,6 @@ function displayExpenses() {
         expenseCard.classList.add(
             "expense-card"
         );
-
-        displaySplitSummary();
-
 
         expenseCard.innerHTML = `
             <div class="expense-info">
@@ -196,6 +194,7 @@ function displayExpenses() {
 
         expensesContainer.appendChild(expenseCard);
     });
+    calculateSplit();
 
 }
 
@@ -314,71 +313,64 @@ cancelExpenseBtn.addEventListener(
 loadTrips();
 displayExpenses();
 
-/* Split calculation */
 
-function displaySplitSummary() {
+/* Run Split Calculation */
+
+function calculateSplit() {
+
     const selectedTripId = tripSelect.value;
-    const totalExpensesElement = document.getElementById("totalExpenses");
-    const eachPersonPaysElement = document.getElementById("eachPersonPays");
-    const balanceList = document.getElementById("balanceList");
-
 
     if (selectedTripId === "") {
-
-        totalExpensesElement.textContent = "₹0.00";
-        eachPersonPaysElement.textContent = "₹0.00";
-
-        balanceList.innerHTML = "";
         return;
     }
-
 
     const trip = getTripById(selectedTripId);
 
     if (!trip || !trip.membersList) {
-
-        totalExpensesElement.textContent = "₹0.00";
-        eachPersonPaysElement.textContent = "₹0.00";
-
-        balanceList.innerHTML = "";
         return;
     }
 
 
-    const expenses = getExpenses().filter(
-        expense => expense.tripId === selectedTripId
-    );
+    const expenses =
+        getExpenses().filter(
+            expense =>
+                expense.tripId === selectedTripId
+        );
 
 
-    const members = trip.membersList;
-
-
-    /* Total expense */
-
-    let totalExpenses = 0;
-
-    expenses.forEach(expense => {
-        totalExpenses += Number(expense.amount);
+    splitWorker.postMessage({
+        expenses: expenses,
+        members: trip.membersList
     });
 
+}
 
-    /* Each person's share */
+/* Receive Worker Result */
 
-    let eachPersonPays = 0;
-    if (members.length > 0) {
-        eachPersonPays = totalExpenses / members.length;
-    }
+splitWorker.onmessage = function(event) {
 
+    const result = event.data;
 
-    totalExpensesElement.textContent = `₹${totalExpenses.toFixed(2)}`;
-    eachPersonPaysElement.textContent = `₹${eachPersonPays.toFixed(2)}`;
+    displaySplitSummary(result);
+    displayAnalytics(result.analytics);
 
+};
 
-    /* Memeber Balances */
+/* Display Split Summary */
+
+function displaySplitSummary(result) {
+
+    const totalExpensesElement = document.getElementById("totalExpenses");
+    const eachPersonPaysElement = document.getElementById("eachPersonPays");
+    const balanceList = document.getElementById("balanceList");
+
+    totalExpensesElement.textContent = `₹${result.totalExpenses.toFixed(2)}`;
+    eachPersonPaysElement.textContent = `₹${result.eachPersonPays.toFixed(2)}`;
 
     balanceList.innerHTML = "";
 
-    if (members.length === 0) {
+    if (result.balances.length === 0) {
+
         balanceList.innerHTML = `
             <p class="no-members">
                 Add members to this trip to calculate balances.
@@ -386,34 +378,26 @@ function displaySplitSummary() {
         `;
 
         return;
+
     }
 
-    members.forEach(member => {
-        let paidAmount = 0;
 
-        expenses.forEach(expense => {
-            if (expense.paidBy === member.name) {
-                paidAmount += Number(expense.amount);
-            }
-        });
+    result.balances.forEach(member => {
 
-        const balance = paidAmount - eachPersonPays;
+        let balanceText = "";
+        let balanceClass = "";
 
-        const balanceClass =
-            balance > 0 ?
-                "positive-balance"
-                : balance < 0 ?
-                    "negative-balance"
-                    : "zero-balance";
+        if (member.status === "gets") {
+            balanceText = `Gets ₹${member.balance.toFixed(2)}`;
+            balanceClass = "positive-balance";
 
-
-        const balanceText =
-            balance > 0 ?
-                `Gets ₹${balance.toFixed(2)}`
-                : balance < 0 ?
-                    `Owes ₹${Math.abs(balance).toFixed(2)}`
-                    : "Settled";
-
+        } else if (member.status === "owes") {
+            balanceText = `Owes ₹${Math.abs(member.balance).toFixed(2)}`;
+            balanceClass = "negative-balance";
+        } else {
+            balanceText = "Settled";
+            balanceClass = "zero-balance";
+        }
 
         const balanceItem = document.createElement("div");
 
@@ -423,27 +407,79 @@ function displaySplitSummary() {
 
 
         balanceItem.innerHTML = `
+
             <div>
+
                 <h3>
                     ${member.name}
                 </h3>
 
                 <p>
-                    Paid: ₹${paidAmount.toFixed(2)}
+                    Paid: ₹${member.paidAmount.toFixed(2)}
                 </p>
+
             </div>
 
+
             <div class="${balanceClass}">
+
                 ${balanceText}
+
             </div>
 
         `;
 
-
-        balanceList.appendChild(
-            balanceItem
-        );
+        balanceList.appendChild(balanceItem);
 
     });
 
+}
+
+/* Display Analytics */
+
+function displayAnalytics(analytics) {
+
+    document.getElementById("analyticsTotal").textContent = `₹${analytics.totalExpenses?.toFixed(2) || "0.00"}`;
+    document.getElementById("analyticsAverage").textContent = `₹${analytics.averageExpense.toFixed(2)}`;
+
+    document.getElementById("analyticsCount").textContent = analytics.expenseCount;
+
+    if (analytics.highestExpense) {
+        document.getElementById("analyticsHighest").textContent =`₹${Number(analytics.highestExpense.amount).toFixed(2)}`;
+    } else {
+        document.getElementById("analyticsHighest").textContent ="₹0.00";
+    }
+
+
+    if (analytics.lowestExpense) {
+        document.getElementById("analyticsLowest").textContent =`₹${Number(analytics.lowestExpense.amount).toFixed(2)}`;
+    } else {
+        document.getElementById("analyticsLowest").textContent ="₹0.00";
+    }
+
+    document.getElementById("analyticsHighestSpender").textContent =analytics.highestSpender || "-";
+
+}
+
+/* Clear Split Data */
+
+function clearSplitData() {
+
+    document.getElementById("totalExpenses").textContent = "₹0.00";
+    document.getElementById("eachPersonPays").textContent = "₹0.00";
+
+
+    document.getElementById("balanceList").innerHTML = "";
+    document.getElementById("analyticsTotal").textContent = "₹0.00";
+
+
+    document.getElementById("analyticsAverage").textContent = "₹0.00";
+    document.getElementById("analyticsHighest").textContent = "₹0.00";
+
+
+    document.getElementById("analyticsLowest").textContent = "₹0.00";
+    document.getElementById("analyticsCount").textContent = "0";
+
+
+    document.getElementById("analyticsHighestSpender").textContent = "-";
 }
