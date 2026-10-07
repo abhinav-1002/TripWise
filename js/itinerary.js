@@ -1,4 +1,5 @@
 const addActivityBtn = document.getElementById("addActivityBtn");
+const tripSelect = document.getElementById("tripSelect");
 const activityFormContainer = document.getElementById("activityFormContainer");
 const activityForm = document.getElementById("activityForm");
 const cancelActivityBtn = document.getElementById("cancelActivityBtn");
@@ -6,10 +7,34 @@ const itineraryContainer = document.getElementById("itineraryContainer");
 
 let editingActivityId = null;
 
+function loadTrips() {
+    const trips = getTrips();
+
+    tripSelect.innerHTML = `
+        <option value="">
+            Select a trip
+        </option>
+    `;
+
+    trips.forEach(trip => {
+        const option = document.createElement("option");
+
+        option.value = trip.id;
+        option.textContent = trip.name;
+
+        tripSelect.appendChild(option);
+    });
+}
+
 
 /* Show Form */
 function showActivityForm() {
+    if (!tripSelect.value) {
+        alert("Please select a trip first.");
+        return;
+    }
     activityFormContainer.style.display = "block";
+
     activityForm.scrollIntoView({
         behavior: "smooth"
     });
@@ -26,18 +51,48 @@ function hideActivityForm() {
 
 /* Display activitities */
 function displayActivities() {
-    const activities = getActivities();
+    const selectedTripId = tripSelect.value;
+
     itineraryContainer.innerHTML = "";
 
-    if (activities.length === 0) {
-        itineraryContainer.classList.remove("has-activities");
+    if (!selectedTripId) {
+        itineraryContainer.classList.remove(
+            "has-activities"
+        );
+
         itineraryContainer.innerHTML = `
             <div class="empty-state">
-                <h3>
-                    No activities yet
-                </h3>
+                <h3>Select a trip</h3>
+
                 <p>
-                    Add your first activity to start planning your itinerary.
+                    Select a trip to view its itinerary.
+                </p>
+            </div>
+        `;
+        return;
+    }
+
+    const activities = getActivities();
+
+    const tripActivities =
+        activities.filter(
+            activity =>
+                activity.tripId === selectedTripId
+        );
+
+    if (tripActivities.length === 0) {
+
+        itineraryContainer.classList.remove(
+            "has-activities"
+        );
+
+        itineraryContainer.innerHTML = `
+            <div class="empty-state">
+                <h3>No activities yet</h3>
+
+                <p>
+                    Add your first activity to start
+                    planning this trip.
                 </p>
             </div>
         `;
@@ -46,19 +101,23 @@ function displayActivities() {
 
     itineraryContainer.classList.add("has-activities");
 
-    activities.sort((a, b) => {
+    tripActivities.sort((a, b) => {
+
         if (a.day !== b.day) {
             return a.day - b.day;
         }
+
         return a.time.localeCompare(b.time);
+
     });
 
+    tripActivities.forEach(activity => {
 
-    activities.forEach(activity => {
         const activityCard = document.createElement("div");
         activityCard.classList.add("activity-card");
 
         activityCard.innerHTML = `
+
             <div class="activity-info">
                 <p class="activity-day">
                     Day ${activity.day}
@@ -102,7 +161,6 @@ function displayActivities() {
 
         itineraryContainer.appendChild(activityCard);
     });
-
 }
 
 
@@ -119,7 +177,15 @@ activityForm.addEventListener(
         const location = document.getElementById("activityLocation").value.trim();
         const description = document.getElementById("activityDescription").value.trim();
 
+        const tripId = tripSelect.value;
+
+        if (!tripId) {
+            alert("Please select a trip first.");
+            return;
+        }
+
         const activityData = {
+            tripId: tripId,
             day: day,
             time: time,
             name: name,
@@ -157,6 +223,8 @@ function editActivity(activityId) {
         return;
     }
 
+    tripSelect.value = activity.tripId;
+
     document.getElementById("activityDay").value = activity.day;
     document.getElementById("activityTime").value = activity.time;
     document.getElementById("activityName").value = activity.name;
@@ -187,17 +255,9 @@ function removeActivity(activityId) {
 
 /* Events */
 
-addActivityBtn.addEventListener(
-    "click",
-    showActivityForm
-);
+addActivityBtn.addEventListener("click",showActivityForm);
+cancelActivityBtn.addEventListener("click",hideActivityForm);
+tripSelect.addEventListener("change",displayActivities);
 
-cancelActivityBtn.addEventListener(
-    "click",
-    hideActivityForm
-);
-
-
-/* Load activities */
-
+loadTrips();
 displayActivities();

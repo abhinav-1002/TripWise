@@ -419,6 +419,7 @@ button {
 
 .itinerary-container {
     display: block;
+    margin-bottom: 50px;
 }
 
 .itinerary-container.has-activities {

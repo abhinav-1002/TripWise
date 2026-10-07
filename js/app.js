@@ -7,6 +7,9 @@ const cancelTripBtn = document.getElementById("cancelTripBtn");
 
 const tripsContainer = document.getElementById("tripsContainer");
 
+const membersInput = document.getElementById("members");
+const memberNamesContainer = document.getElementById("memberNamesContainer");
+
 
 /* Show trips */
 function showTripForm() {
@@ -17,6 +20,41 @@ function showTripForm() {
     });
 }
 
+/* Create Member name fields */
+
+function createMemberNameFields() {
+    const memberCount = Number(membersInput.value);
+
+    memberNamesContainer.innerHTML = "";
+
+    if (memberCount <= 0) {
+        return;
+    }
+
+    for (let i = 1; i <= memberCount; i++) {
+        const memberGroup = document.createElement("div");
+        memberGroup.classList.add(
+            "form-group"
+        );
+
+        memberGroup.innerHTML = `
+
+            <label for="member-${i}">
+                Member ${i} Name
+            </label>
+
+            <input
+                type="text"
+                id="member-${i}"
+                class="member-name-input"
+                placeholder="Enter member ${i} name"
+                required
+            >
+        `;
+
+        memberNamesContainer.appendChild(memberGroup);
+    }
+}
 
 /* Hide trips */
 function hideTripForm() {
@@ -68,7 +106,7 @@ function displayTrips() {
 
             <p>
                 <strong>Members:</strong>
-                ${trip.members}
+                ${trip.membersList? trip.membersList.length : trip.members}
             </p>
 
             <div class="trip-card-actions">
@@ -112,6 +150,20 @@ tripForm.addEventListener("submit", function(event) {
     const endDate = document.getElementById("endDate").value;
     const members = document.getElementById("members").value;
 
+    const memberInputs =
+    document.querySelectorAll(".member-name-input");
+
+    const membersList = [];
+
+
+    memberInputs.forEach(input => {
+        const memberName = input.value.trim();
+        membersList.push({
+            id: Date.now().toString() + Math.random().toString(36).substring(2, 7),
+            name: memberName
+        });
+    });
+
 
     const newTrip = {
         id: Date.now().toString(),
@@ -119,7 +171,8 @@ tripForm.addEventListener("submit", function(event) {
         destination: destination,
         startDate: startDate,
         endDate: endDate,
-        members: Number(members)
+        members: membersList.length,
+        membersList: membersList
     };
 
     addTrip(newTrip);
@@ -272,6 +325,7 @@ function removeMember(tripId, memberId) {
 createTripBtn.addEventListener("click", showTripForm);
 addTripBtn.addEventListener("click", showTripForm);
 cancelTripBtn.addEventListener("click", hideTripForm);
+membersInput.addEventListener("input",createMemberNameFields);
 
 /* Load trips */
 displayTrips();
