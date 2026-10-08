@@ -817,3 +817,84 @@ button {
 .analytics-details h3 {
     font-size: 1.2rem;
 }
+
+.split-members {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.split-member {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.split-member-checkbox {
+    width: auto;
+    margin: 0;
+}
+
+/* Split members dropdown */
+
+.split-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.split-dropdown-btn {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: left;
+}
+
+.split-dropdown-btn:hover {
+    border-color: var(--primary);
+}
+
+.split-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    z-index: 10;
+}
+
+.split-dropdown.open .split-dropdown-menu {
+    display: block;
+}
+
+.split-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.split-option:hover {
+    background: var(--background);
+}
+
+.split-option input {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+}

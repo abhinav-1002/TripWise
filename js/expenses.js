@@ -1,10 +1,17 @@
 const tripSelect = document.getElementById("tripSelect");
+
 const addExpenseBtn = document.getElementById("addExpenseBtn");
 const expenseFormContainer = document.getElementById("expenseFormContainer");
 const expenseForm = document.getElementById("expenseForm");
 const cancelExpenseBtn = document.getElementById("cancelExpenseBtn");
 const expensesContainer = document.getElementById("expensesContainer");
+
 const paidBySelect = document.getElementById("paidBy");
+
+const splitDropdown = document.getElementById("splitDropdown");
+const splitDropdownBtn = document.getElementById("splitDropdownBtn");
+const splitDropdownText = document.getElementById("splitDropdownText");
+const splitDropdownMenu = document.getElementById("splitDropdownMenu");
 
 const splitWorker = new Worker("./../js/workers/splitWorker.js");
 
@@ -36,11 +43,15 @@ function loadTrips() {
 /* Load Members */
 
 function loadMembers(tripId) {
+
     paidBySelect.innerHTML = `
         <option value="">
             Select Member
         </option>
     `;
+
+    splitDropdownMenu.innerHTML = "";
+    splitDropdownText.textContent = "All Members";
 
     const trip = getTripById(tripId);
 
@@ -48,15 +59,68 @@ function loadMembers(tripId) {
         return;
     }
 
+
+    /* ALl members option */
+
+    const allLabel = document.createElement("label");
+    allLabel.classList.add("split-option");
+
+    allLabel.innerHTML = `
+
+        <input
+            type="checkbox"
+            class="split-checkbox"
+            id="split-all"
+            value="all"
+            checked
+        >
+
+        <span>
+            All Members
+        </span>
+
+    `;
+
+    splitDropdownMenu.appendChild(
+        allLabel
+    );
+
+
+    /* Individual Members */
+
     trip.membersList.forEach(member => {
+
         const option = document.createElement("option");
         option.value = member.name;
         option.textContent = member.name;
+
         paidBySelect.appendChild(option);
 
-    });
-}
+        const memberLabel = document.createElement("label");
+        memberLabel.classList.add("split-option");
 
+        memberLabel.innerHTML = `
+
+            <input
+                type="checkbox"
+                class="split-checkbox"
+                value="${member.name}"
+                checked
+            >
+
+            <span>
+                ${member.name}
+            </span>
+
+        `;
+
+        splitDropdownMenu.appendChild(
+            memberLabel
+        );
+
+    });
+
+}
 
 /* Show Form */
 
@@ -213,12 +277,31 @@ expenseForm.addEventListener(
 
         const date = document.getElementById("expenseDate").value;
 
+        const selectedMembers =
+            Array.from(
+                document.querySelectorAll(
+                    ".split-checkbox:not(#split-all)"
+                )
+            )
+            .filter(
+                checkbox => checkbox.checked
+            )
+            .map(
+                checkbox => checkbox.value
+            );
+
+        if (selectedMembers.length === 0) {
+            alert("Please select at least one member.");
+            return;
+        }
+
 
         const expenseData = {
             tripId: tripId,
             name: name,
             amount: amount,
             paidBy: paidBy,
+            splitBetween: selectedMembers,
             date: date
         };
 
@@ -247,8 +330,12 @@ expenseForm.addEventListener(
 /*Edit expense */
 
 function editExpense(expenseId) {
+
     const expenses = getExpenses();
-    const expense = expenses.find(expense =>expense.id === expenseId);
+
+    const expense = expenses.find(
+            expense => expense.id === expenseId
+        );
 
     if (!expense) {
         return;
@@ -262,6 +349,54 @@ function editExpense(expenseId) {
     document.getElementById("expenseAmount").value = expense.amount;
     document.getElementById("paidBy").value = expense.paidBy;
     document.getElementById("expenseDate").value = expense.date;
+
+    /* Restore split members */
+    const checkboxes = document.querySelectorAll(".split-checkbox");
+    const allCheckbox = document.getElementById("split-all");
+
+    if (expense.splitBetween && expense.splitBetween.length > 0) {
+        const selectedMembers = expense.splitBetween;
+
+        checkboxes.forEach(checkbox => {
+            if (checkbox.value === "all") {
+                return;
+            }
+
+            checkbox.checked = selectedMembers.includes(checkbox.value);
+        });
+
+
+        const memberCheckboxes = document.querySelectorAll(".split-checkbox:not(#split-all)");
+
+        const allSelected =
+            Array.from(
+                memberCheckboxes
+            ).every(
+                checkbox => checkbox.checked
+            );
+
+        allCheckbox.checked = allSelected;
+
+        if (allSelected) {
+            splitDropdownText.textContent = "All Members";
+        } 
+        else {
+            splitDropdownText.textContent = selectedMembers.join(", ");
+        }
+    } 
+    else {
+        // Old expenses created before participant-based splitting are treated as All Members.
+
+        checkboxes.forEach(
+            checkbox => {
+                checkbox.checked = true;
+            }
+        );
+
+        allCheckbox.checked = true;
+        splitDropdownText.textContent = "All Members";
+    }
+
 
     editingExpenseId = expenseId;
     showExpenseForm();
@@ -361,11 +496,13 @@ splitWorker.onmessage = function(event) {
 function displaySplitSummary(result) {
 
     const totalExpensesElement = document.getElementById("totalExpenses");
-    const eachPersonPaysElement = document.getElementById("eachPersonPays");
     const balanceList = document.getElementById("balanceList");
 
     totalExpensesElement.textContent = `₹${result.totalExpenses.toFixed(2)}`;
-    eachPersonPaysElement.textContent = `₹${result.eachPersonPays.toFixed(2)}`;
+    const activeParticipantsElement = document.getElementById("eachPersonPays");
+
+    const activeParticipants = result.balances.filter(member => member.amountOwed > 0).length;
+    activeParticipantsElement.textContent = activeParticipants;
 
     balanceList.innerHTML = "";
 
@@ -483,3 +620,75 @@ function clearSplitData() {
 
     document.getElementById("analyticsHighestSpender").textContent = "-";
 }
+
+splitDropdownBtn.addEventListener(
+    "click",
+    function() {
+
+        splitDropdown.classList.toggle(
+            "open"
+        );
+
+    }
+);
+
+splitDropdownMenu.addEventListener(
+    "change",
+    function(event) {
+
+        if (!event.target.classList.contains("split-checkbox")) {
+            return;
+        }
+
+        const checkboxes = document.querySelectorAll(".split-checkbox");
+        const allCheckbox = document.getElementById("split-all");
+
+        if (event.target === allCheckbox) {
+
+            checkboxes.forEach(
+                checkbox => {
+                    checkbox.checked = allCheckbox.checked;
+                }
+            );
+
+            splitDropdownText.textContent = allCheckbox.checked ? "All Members" : "Select Members";
+
+            return;
+        }
+
+
+        const memberCheckboxes = document.querySelectorAll(".split-checkbox:not(#split-all)");
+
+        const allSelected =
+            Array.from(
+                memberCheckboxes
+            ).every(
+                checkbox => checkbox.checked
+            );
+
+
+        allCheckbox.checked = allSelected;
+
+        const selectedMembers =
+            Array.from(
+                memberCheckboxes
+            )
+            .filter(
+                checkbox => checkbox.checked
+            )
+            .map(
+                checkbox => checkbox.value
+            );
+
+
+        if (allSelected) {
+            splitDropdownText.textContent = "All Members";
+        } 
+        else if (selectedMembers.length === 0) {
+            splitDropdownText.textContent = "Select Members";
+        } 
+        else {
+            splitDropdownText.textContent = selectedMembers.join(", ");
+        }
+    }
+);

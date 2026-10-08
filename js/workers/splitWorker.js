@@ -16,13 +16,39 @@ self.onmessage = function(event) {
     });
 
 
-    /* Each Person's Share */
 
-    let eachPersonPays = 0;
+    /* Members share */
 
-    if (members.length > 0) {
-        eachPersonPays = totalExpenses / members.length;
-    }
+    const memberShares = {};
+
+    members.forEach(member => {
+        memberShares[member.name] = 0;
+    });
+
+
+    expenses.forEach(expense => {
+        let participants = expense.splitBetween;
+
+        /* 
+        Old expenses do not have splitBetween so treat them as shared by everyone.
+        */
+
+        if ( !participants || participants.length === 0) {
+            participants =
+                members.map(
+                    member => member.name
+                );
+        }
+
+        const share = Number(expense.amount) / participants.length;
+
+        participants.forEach(memberName => {
+            if (memberShares[memberName] !== undefined) {
+                memberShares[memberName] += share;
+            }
+        });
+
+    });
 
 
     /* Member Balances */
@@ -32,34 +58,33 @@ self.onmessage = function(event) {
     members.forEach(member => {
 
         let paidAmount = 0;
-
         expenses.forEach(expense => {
-
             if (expense.paidBy === member.name) {
                 paidAmount += Number(expense.amount);
             }
-
         });
 
-
-        const balance = paidAmount - eachPersonPays;
+        const amountOwed = memberShares[member.name] || 0;
+        const balance = paidAmount - amountOwed;
 
         let status = "settled";
 
         if (balance > 0) {
             status = "gets";
-        } else if (balance < 0) {
+        } 
+        else if (balance < 0) {
             status = "owes";
         }
 
         balances.push({
             name: member.name,
             paidAmount: paidAmount,
+            amountOwed: amountOwed,
             balance: balance,
             status: status
         });
-
     });
+
 
 
     /* Expense Analytics */
@@ -110,7 +135,6 @@ self.onmessage = function(event) {
     self.postMessage({
 
         totalExpenses: totalExpenses,
-        eachPersonPays: eachPersonPays,
         balances: balances,
 
         analytics: {
