@@ -4,59 +4,111 @@ A frontend-only travel planner and group expense splitting application built usi
 
 ## 1. Project Overview
 
-*TripWise** helps users plan and manage group trips in one place. Users can create trips, add members, manage their itinerary, and track shared expenses.
+TripWise helps users plan and manage group trips in one place. Users can create and manage trips, add members, organize day-wise itineraries, and track shared expenses.
 
-The main feature, **Split It**, calculates how much each person contributed, how expenses should be divided, and who owes whom.
+The main feature, **Split It**, allows users to split expenses among selected trip members, calculate individual contributions and balances, and understand who owes money and who should receive it.
 
 ## 2. Key Features
 
-* Create, edit and delete trips.
-* Add and manage trip members.
-* Create and manage day-wise itineraries.
-* Add, edit and delete shared expenses.
-* Split expenses among selected members.
-* Calculate individual contributions and balances.
-* Store data using browser `localStorage`.
-* Responsive design for mobile, tablet and desktop.
+- Create, edit and delete trips.
+- Add and manage trip members.
+- Create, edit and delete day-wise itinerary activities.
+- Maintain separate itineraries for individual trips.
+- Add, edit and delete shared expenses.
+- Split expenses among all members or selected participants.
+- Calculate individual contributions and outstanding balances.
+- Display expense analytics, including total, average, highest and lowest expenses, and highest spender.
+- Use Web Workers to perform expense calculations and analytics.
+- Store application data using browser `localStorage`.
+- Responsive design for mobile, tablet and desktop.
 
 ## 3. Technology & Project Specifications
 
-* **HTML5** – Structure and forms
-* **CSS3** – Styling and responsive design
-* **JavaScript** – DOM manipulation, events, CRUD operations and calculations
-* **Web Storage API** – Data persistence
-* No external JavaScript libraries or frameworks.
-* Frontend-only application with multiple pages.
+- **HTML5** – Page structure, forms and content.
+- **CSS3** – Styling, layouts and responsive design.
+- **JavaScript (ES6+)** – DOM manipulation, event handling, CRUD operations and expense calculations.
+- **Web Storage API** – Persistent data storage using `localStorage`.
+- **Web Workers API** – Background processing for expense splitting and analytics.
+- **Git & GitHub** – Version control and project hosting.
+
+### Project Specifications
+
+- Frontend-only application.
+- Multiple HTML pages for different sections.
+- No external JavaScript libraries or frameworks.
+- CRUD operations for trips, members, itinerary activities and expenses.
+- Data persistence across page refreshes using browser storage.
 
 ## 4. Project Proposal
 
-### Problem
+### Problem Statement
 
-Managing travel plans and shared expenses becomes difficult when multiple people are involved.
+Planning group trips involves managing travel activities, coordinating members and dividing shared expenses. Handling these tasks separately can become confusing and make it difficult to determine who owes whom.
 
-### Goal
+### Project Goal
 
-TripWise combines **travel itinerary management** and **group expense splitting** into a single simple application.
+TripWise combines **travel itinerary management** and **group expense splitting** into a single, simple application. It aims to make group travel organization easier by keeping trip details, activities and shared expenses together.
 
 ### CRUD Operations
 
-| Operation | Examples                             |
-| --------- | ------------------------------------ |
-| Create    | Trips, members, activities, expenses |
-| Read      | Trips, itinerary, expenses, balances |
-| Update    | Trip details, activities, expenses   |
-| Delete    | Trips, members, activities, expenses |
+| Operation | Examples |
+|---|---|
+| Create | Trips, members, activities and expenses |
+| Read | Trips, members, itineraries, expenses and balances |
+| Update | Trip details, member information, activities and expenses |
+| Delete | Trips, members, activities and expenses |
 
-## 5. Setup & License
+## 5. Project Structure
+
+```text
+TripWise/
+├── index.html
+├── README.md
+├── LICENSE
+├── assets/
+├── css/
+│   ├── styles.css
+│   └── responsive.css
+├── js/
+│   ├── app.js
+│   ├── itinerary.js
+│   ├── expenses.js
+│   ├── helpers/
+│   │   ├── calculations.js
+│   │   ├── storage.js
+│   └── workers/
+│       └── splitWorker.js
+└── pages/
+    ├── itinerary.html
+    └── expenses.html
+```
+
+## 6. Setup & Installation
+
+### Prerequisites
+
+- A modern web browser.
+- Visual Studio Code or another code editor.
+- Git (optional, for cloning the repository).
 
 ### Run Locally
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/abhinav-1002/TripWise.git
 ```
 
-Open the project in VS Code and run `index.html` in a modern browser.
+Navigate to the project directory:
 
-### License
+```bash
+cd TripWise
+```
 
-This project is licensed under the **MIT License**.
+Open the project in Visual Studio Code and run `index.html` in a modern browser.
+
+**Note:** If browser restrictions affect JavaScript modules or Web Workers, run the project using the VS Code Live Server extension or another local HTTP server.
+
+## 7. License
+
+This project is licensed under the **MIT License**. See the `LICENSE` file for details.
